@@ -17,7 +17,6 @@ type HoverUnderlay = {
   backgroundColor: string;
   pageBg: string;
   backgroundImage: string;
-  boxShadow: string;
   display: string;
   titleRight: number;
   controlsLeft: number;
@@ -40,20 +39,11 @@ const readUnderlay = (page: Page): Promise<HoverUnderlay> =>
       backgroundColor: cs.backgroundColor,
       pageBg,
       backgroundImage: cs.backgroundImage,
-      boxShadow: cs.boxShadow,
       display: cs.display,
       titleRight: title.getBoundingClientRect().right,
       controlsLeft: controls.getBoundingClientRect().left,
     };
   });
-
-const shadowOffsetX = (shadow: string): number => {
-  const match = /(-?\d+(?:\.\d+)?)px/.exec(shadow);
-  if (!match) {
-    throw new Error(`no offset in box-shadow: ${shadow}`);
-  }
-  return Number(match[1]);
-};
 
 const expectOpaqueUnderlay = async (page: Page): Promise<void> => {
   const underlay = await readUnderlay(page);
@@ -83,23 +73,6 @@ test.describe('Task hover controls cover the title', () => {
     expect(widthAfter).toBe(widthBefore);
 
     await expectOpaqueUnderlay(page);
-
-    const ltr = await readUnderlay(page);
-    expect(shadowOffsetX(ltr.boxShadow)).toBeLessThan(0);
-
-    await page.evaluate(() => document.body.classList.add('hasBgImage'));
-    const withWallpaper = await readUnderlay(page);
-    expect(withWallpaper.boxShadow).toBe('none');
-    await page.evaluate(() => document.body.classList.remove('hasBgImage'));
-    const restored = await readUnderlay(page);
-    expect(shadowOffsetX(restored.boxShadow)).toBeLessThan(0);
-
-    await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
-    await task.hover();
-    const rtl = await readUnderlay(page);
-    expect(shadowOffsetX(rtl.boxShadow)).toBeGreaterThan(0);
-    await page.evaluate(() => document.documentElement.removeAttribute('dir'));
-    await task.hover();
 
     await page.evaluate(() => document.body.classList.add('isTouchOnly'));
     const touch = await readUnderlay(page);

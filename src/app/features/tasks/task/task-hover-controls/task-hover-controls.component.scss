@@ -31,10 +31,6 @@
     transform-origin: left center;
     left: 100%;
     right: unset;
-
-    :host-context(body:not(.hasBgImage)) & {
-      box-shadow: var(--s) 0 var(--s) var(--bg);
-    }
   }
 
   @include mq(xs, max) {
@@ -63,50 +59,52 @@
   :host-context(.first-line:hover) & {
     display: flex;
 
-    // The row token stays the top layer (it may be transparent). The page
-    // color underneath is what actually covers the title.
-    background: linear-gradient(var(--task-c-bg), var(--task-c-bg)), var(--bg);
+    // The row token stays the top layer (it may be transparent). The underlay
+    // underneath is what actually covers the title.
+    background:
+      linear-gradient(var(--task-c-bg), var(--task-c-bg)),
+      var(--task-hover-underlay, var(--bg));
 
     :host-context(.isMultiSelected) & {
       background:
         linear-gradient(var(--task-c-multi-selected-bg), var(--task-c-multi-selected-bg)),
-        var(--bg);
+        var(--task-hover-underlay, var(--bg));
     }
 
     :host-context(.isLightTheme .isSelected) & {
       background:
-        linear-gradient(var(--task-c-selected-bg), var(--task-c-selected-bg)), var(--bg);
+        linear-gradient(var(--task-c-selected-bg), var(--task-c-selected-bg)),
+        var(--task-hover-underlay, var(--bg));
     }
 
     :host-context(.isDarkTheme .isSelected) & {
       background:
-        linear-gradient(var(--task-c-selected-bg), var(--task-c-selected-bg)), var(--bg);
+        linear-gradient(var(--task-c-selected-bg), var(--task-c-selected-bg)),
+        var(--task-hover-underlay, var(--bg));
     }
 
     :host-context(.isCurrent) & {
       background:
-        linear-gradient(var(--task-c-current-bg), var(--task-c-current-bg)), var(--bg);
+        linear-gradient(var(--task-c-current-bg), var(--task-c-current-bg)),
+        var(--task-hover-underlay, var(--bg));
     }
 
     :host-context(.isDarkTheme .sub-tasks.sub-tasks) ::ng-deep & {
-      background: linear-gradient(var(--sub-task-c-bg), var(--sub-task-c-bg)), var(--bg);
+      background:
+        linear-gradient(var(--sub-task-c-bg), var(--sub-task-c-bg)),
+        var(--task-hover-underlay, var(--bg));
     }
 
     :host-context(.isDarkTheme .sub-tasks.sub-tasks .isSelected) ::ng-deep & {
       background:
-        linear-gradient(var(--task-c-selected-bg), var(--task-c-selected-bg)), var(--bg);
+        linear-gradient(var(--task-c-selected-bg), var(--task-c-selected-bg)),
+        var(--task-hover-underlay, var(--bg));
     }
 
     :host-context(.sub-tasks.sub-tasks .isCurrent) ::ng-deep & {
       background:
-        linear-gradient(var(--task-c-current-bg), var(--task-c-current-bg)), var(--bg);
-    }
-
-    // Short fade toward the title. Wallpaper themes paint their own control
-    // backgrounds, so this stays off while body.hasBgImage is set. The RTL
-    // mirror lives on the host rule above, so this side is LTR only.
-    :host-context(html[dir='ltr'] body:not(.hasBgImage)) & {
-      box-shadow: calc(-1 * var(--s)) 0 var(--s) var(--bg);
+        linear-gradient(var(--task-c-current-bg), var(--task-c-current-bg)),
+        var(--task-hover-underlay, var(--bg));
     }
   }
 
